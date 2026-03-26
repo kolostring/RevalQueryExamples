@@ -1,19 +1,19 @@
 ﻿@using CachingDemo.Client.Services
 @using RevalQuery.Core
 @page "/search-bar-reval-query"
-@attribute [StreamRendering]
 @rendermode InteractiveWebAssembly
 @inherits RevalQuery.Blazor.QueryComponentBase
 
 <PageTitle>Search Bar Example</PageTitle>
 
 <div class="search-box">
-    <div class="d-flex">
+    <div style="display: flex; gap: 8px;">
         <input @bind="SearchTerm" @bind:event="oninput" placeholder="Type to search..."/>
 
         @if (Suggestions.IsFetching)
         {
-            <div class="spinner-border spinner-border-sm">
+            <div>
+                Loading...
             </div>
         }
     </div>

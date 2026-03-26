@@ -7,12 +7,13 @@
 <PageTitle>Search Bar Example</PageTitle>
 
 <div class="search-box">
-    <div class="d-flex">
+    <div style="display: flex; gap: 8px;">
         <input @bind="SearchTerm" @bind:event="oninput" placeholder="Type to search..."/>
 
         @if (IsLoading)
         {
-            <div class="spinner-border spinner-border-sm">
+            <div>
+                Loading...
             </div>
         }
     </div>
@@ -30,7 +31,7 @@
             }
         </ul>
     }
-    else if(IsLoading)
+    else if (IsLoading)
     {
         <p><em>Nothing to show</em></p>
     }
@@ -73,34 +74,23 @@
         try
         {
             await Task.Delay(300, currentCts.Token);
-
             IsLoading = true;
             ErrorMessage = null;
             StateHasChanged();
-
-            var results = await SearchService.SearchAsync(term, currentCts.Token);
-
-            if (currentCts == _runningCts)
-            {
-                Suggestions = results;
-            }
+            Suggestions = await SearchService.SearchAsync(term, currentCts.Token);
         }
         catch (OperationCanceledException)
         {
+            return;
         }
         catch (Exception ex)
         {
-            if (currentCts == _runningCts) ErrorMessage = ex.Message;
+            ErrorMessage = ex.Message;
         }
-        finally
-        {
-            if (currentCts == _runningCts)
-            {
-                IsLoading = false;
-                StateHasChanged();
-            }
-        }
+
+        IsLoading = false;
+        StateHasChanged();
     }
 
-    public void Dispose() => _runningCts?.Dispose();
+public void Dispose() => _runningCts?.Dispose();
 }
