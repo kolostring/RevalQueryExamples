@@ -43,13 +43,16 @@
     IQueryState<List<string>> Suggestions => UseQuery
     (QueryOptionsFactory.Create
         (
-            ("search", SearchTerm),
-            async static
-                ctx =>
+            key: ("search", SearchTerm),
+            handler: async static ctx =>
             {
                 var res = await SearchService.SearchAsync(ctx.Key.SearchTerm);
                 return QueryResult.Success(res);
             }
         )
+        .WithFetchOptions(new(
+            StaleTime: TimeSpan.FromMinutes(5)
+        ))
     );
+
 }
