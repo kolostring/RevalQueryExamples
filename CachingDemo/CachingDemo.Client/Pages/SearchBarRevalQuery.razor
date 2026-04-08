@@ -1,6 +1,6 @@
-﻿@using CachingDemo.Client.Services
+﻿@page "/search-bar-reval-query"
+@using CachingDemo.Client.Services
 @using RevalQuery.Core
-@page "/search-bar-reval-query"
 @rendermode InteractiveWebAssembly
 @inherits RevalQuery.Blazor.QueryComponentBase
 
@@ -22,7 +22,7 @@
     {
         <p style="color:red">Error: @Suggestions.Error.Message</p>
     }
-    else @if (Suggestions.Data is not null)
+    else if (Suggestions.Data is not null)
     {
         <ul>
             @foreach (var item in Suggestions.Data)
@@ -40,19 +40,16 @@
 @code {
     private string SearchTerm { get; set; } = string.Empty;
 
-    IQueryState<List<string>> Suggestions => UseQuery
-    (QueryOptionsFactory.Create
-        (
-            key: ("search", SearchTerm),
-            handler: async static ctx =>
-            {
-                var res = await SearchService.SearchAsync(ctx.Key.SearchTerm);
-                return QueryResult.Success(res);
-            }
-        )
-        .WithFetchOptions(new(
-            StaleTime: TimeSpan.FromMinutes(5)
-        ))
+    IQueryState<List<string>> Suggestions => UseQuery(
+        key: ("search", SearchTerm),
+        handler: async static ctx =>
+        {
+            var res = await SearchService.SearchAsync(ctx.Key.SearchTerm);
+            return QueryResult.Success(res);
+        },
+        options => options
+            .ConfigureFetch(fetch => fetch
+                .StaleTime(TimeSpan.FromMinutes(5))
+            )
     );
-
 }

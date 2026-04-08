@@ -22,8 +22,7 @@
     {
         <p style="color:red">Error: @ErrorMessage</p>
     }
-    else
-    @if (Suggestions.Any())
+    else if (Suggestions.Any())
     {
         <ul>
             @foreach (var item in Suggestions)
