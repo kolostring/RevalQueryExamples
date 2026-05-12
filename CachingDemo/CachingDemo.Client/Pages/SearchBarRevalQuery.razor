@@ -1,6 +1,7 @@
 ﻿@page "/search-bar-reval-query"
 @using CachingDemo.Client.Services
 @using RevalQuery.Core
+@using RevalQuery.Core.Abstractions.Query
 @rendermode InteractiveWebAssembly
 @inherits RevalQuery.Blazor.QueryComponentBase
 
@@ -8,7 +9,7 @@
 
 <div class="search-box">
     <div style="display: flex; gap: 8px;">
-        <input @bind="SearchTerm" @bind:event="oninput" placeholder="Type to search..."/>
+        <input @bind="SearchTerm" @bind:event="oninput" placeholder="Type to search..." />
 
         @if (Suggestions.IsFetching)
         {
@@ -18,9 +19,9 @@
         }
     </div>
 
-    @if (Suggestions.Error is not null)
+    @if (Suggestions.Exception is not null)
     {
-        <p style="color:red">Error: @Suggestions.Error.Message</p>
+        <p style="color:red">Error: @Suggestions.Exception.Message</p>
     }
     else if (Suggestions.Data is not null)
     {
@@ -45,7 +46,7 @@
         handler: async static ctx =>
         {
             var res = await SearchService.SearchAsync(ctx.Key.SearchTerm);
-            return QueryResult.Success(res);
+            return res;
         },
         options => options
             .ConfigureFetch(fetch => fetch

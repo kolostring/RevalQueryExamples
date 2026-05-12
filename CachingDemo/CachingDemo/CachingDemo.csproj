@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CachingDemo.Client\CachingDemo.Client.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.5" />
   </ItemGroup>
 
   <ItemGroup>
